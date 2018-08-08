@@ -11,6 +11,8 @@ public class TicTacToe {
     private static int X,Y;
     private static boolean MAP_IS_EMPTY = true;
     private static int MOVE_NUMBER = 0;
+    private static int[][] HUMAN_MOVES = new int[2][SIZE*SIZE/2+1];
+    private static int[][] COMP_MOVES  = new int[2][SIZE*SIZE/2+1];
 
     private static final char DOT_EMPTY = '•';      // empty field  •    ⃞  □   '🞎' 🞐  🞏 □ ▢ ▣ ▤ ▥ ▦ ▧ ▨ ▩
     private static final char DOT_X = '⛌';          // chross   ⛌   𐍇
@@ -25,6 +27,7 @@ public class TicTacToe {
     public static void main(String[] args) {
 
         initMap();
+        initHMCM();
         printMap();
 
         while(true) {
@@ -49,6 +52,16 @@ public class TicTacToe {
         for(int i = 0 ; i < SIZE; i++) {
             for(int j = 0; j < SIZE; j++) {
                 map[i][j] = DOT_EMPTY;
+            }
+        }
+    }
+
+    private static void initHMCM() {
+        map = new char[SIZE][SIZE];
+        for(int i = 0 ; i < SIZE; i++) {
+            for(int j = 0; j < SIZE; j++) {
+                HUMAN_MOVES[i][j] = -1;
+                COMP_MOVES[i][j] = -1;
             }
         }
     }
@@ -94,12 +107,20 @@ public class TicTacToe {
                 Y = random.nextInt(SIZE);
             } while (!isCellValid(X, Y));
         } else {
-            if (MOVE_NUMBER == 1) {
+            if (HUMAN_MOVES[0][0] == -1 && COMP_MOVES[0][0] == -1) {
                 do {
                     X = random.nextInt(SIZE);
                     Y = random.nextInt(SIZE);
                 } while (!isCellValid(X, Y));
             } else {
+
+
+
+
+
+
+
+
 
             }
 
@@ -297,6 +318,8 @@ public class TicTacToe {
     private static boolean checkRisk(char[][] arr, char dotRival, int a, int b) {
 
         boolean result = false;
+
+
 
         do {
 // Check left diagonal
