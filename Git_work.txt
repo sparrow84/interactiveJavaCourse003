@@ -1,0 +1,26 @@
+https://github.com/andreiled/mipt-cs-4sem/wiki/%D0%9F%D0%BE%D1%88%D0%B0%D0%B3%D0%BE%D0%B2%D0%B0%D1%8F-%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F-%D0%BF%D0%BE-%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B5-%D1%81-git-%D0%B8-github-%D0%B4%D0%BB%D1%8F-%D1%81%D1%82%D1%83%D0%B4%D0%B5%D0%BD%D1%82%D0%BE%D0%B2
+
+
+Выполняем команду git clone https://github.com/%user_login%/%repo_name%.git. 
+Полную https ссылку на репозиторий для его выкачивания можно также найти на 
+странице самого репозитория на github. После этого в текущей папке появится 
+новая папка с именем %repo_name%, содержащая копию удаленного (remote) репозитория.
+
+
+Переходим в свежесозданную папку репозитория и настраиваем его:
+
+    git config user.name ivan.ivanov
+    git config user.email ivanov@example.com
+
+
+
+
+REM Before start
+git pull
+
+REM Now work.
+
+REM After work
+git add *
+git commit -m "%DATE%"
+git push origin master
