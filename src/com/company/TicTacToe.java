@@ -298,7 +298,6 @@ public class TicTacToe {
 
         boolean result = false;
 
-
         do {
 // Check left diagonal
             int winCount = 0;
