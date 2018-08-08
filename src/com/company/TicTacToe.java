@@ -9,8 +9,8 @@ public class TicTacToe {
     private static int SIZE = 3;        // fild size
     private static int WINNER_SEQUENCE = SIZE;        // количество Х/О подряд для победы
     private static int X,Y;
-    private static boolean MAP_IS_EMPTY = true;
-    private static int MOVE_NUMBER = 0;
+//    private static boolean MAP_IS_EMPTY = true;
+//    private static int MOVE_NUMBER = 0;
     private static int[][] HUMAN_MOVES = new int[2][SIZE*SIZE/2+1];
     private static int[][] COMP_MOVES  = new int[2][SIZE*SIZE/2+1];
 
@@ -31,12 +31,10 @@ public class TicTacToe {
         printMap();
 
         while(true) {
-            MOVE_NUMBER++;
             humanTurn();
             if(isEndGame(DOT_X)) {
                 break;
             }
-//            MOVE_NUMBER++;
 //            computerTurn();
 //            if(isEndGame(DOT_O)) {
 //                break;
@@ -93,46 +91,56 @@ public class TicTacToe {
             X = scanner.nextInt() - 1;
         } while(!isCellValid(X,Y));
 
+        writeInMoves(HUMAN_MOVES, X, Y);
+
         map[Y][X] = DOT_X;
     }
 
     private static void computerTurn() {
 //        int x = -1, y = -1;
-        X = -1;
-        Y = -1;
 
         if (SILLY_MODE) {
-            do {
-                X = random.nextInt(SIZE);
-                Y = random.nextInt(SIZE);
-            } while (!isCellValid(X, Y));
+            sillyMode();
         } else {
             if (HUMAN_MOVES[0][0] == -1 && COMP_MOVES[0][0] == -1) {
-                do {
-                    X = random.nextInt(SIZE);
-                    Y = random.nextInt(SIZE);
-                } while (!isCellValid(X, Y));
+                sillyMode();
+            } else if (HUMAN_MOVES[0][1] == -1) {
+                sillyMode();
             } else {
 
+                int a = 0, b = 0;
 
+                for (int i = 0; i < HUMAN_MOVES.length; i++) {
+                    if (HUMAN_MOVES[0][i] == -1) {
+                        for (int j = i-2; j > -1 ; j--) {
 
+                            a = HUMAN_MOVES[0][i-1] - HUMAN_MOVES[0][j];
+                            b = HUMAN_MOVES[1][i-1] - HUMAN_MOVES[1][j];
 
-
+                        }
+                    }
+                }
 
 
 
 
             }
-
-
-
+        }
 // ************************************************************************************************
 
 
-        }
-
         System.out.println("Computer move -> " + (Y + 1) + " " + (X + 1) + "  [" + map[Y][X] + "]");
+        writeInMoves(COMP_MOVES, X, Y);
         map[Y][X] = DOT_O;
+    }
+
+    private static void sillyMode() {
+        X = -1;
+        Y = -1;
+        do {
+            X = random.nextInt(SIZE);
+            Y = random.nextInt(SIZE);
+        } while (!isCellValid(X, Y));
     }
 
     /*
@@ -437,6 +445,15 @@ public class TicTacToe {
         } while (false);
 
         return result;
+    }
+
+    private static void writeInMoves(int[][] movesArr, int x, int y) {
+        for (int i = 0; i < movesArr.length ; i++) {
+            if (movesArr[0][i] == -1) {
+                movesArr[0][i] = x;
+                movesArr[1][i] = y;
+            }
+        }
     }
 
 }
