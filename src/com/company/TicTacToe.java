@@ -9,7 +9,8 @@ public class TicTacToe {
     private static int SIZE = 3;        // fild size
     private static int WINNER_SEQUENCE = SIZE;        // количество Х/О подряд для победы
     private static int X,Y;
-    private static boolean MAP_IS_EMPTY = false;
+    private static boolean MAP_IS_EMPTY = true;
+    private static int MOVE_NUMBER = 0;
 
     private static final char DOT_EMPTY = '•';      // empty field  •    ⃞  □   '🞎' 🞐  🞏 □ ▢ ▣ ▤ ▥ ▦ ▧ ▨ ▩
     private static final char DOT_X = '⛌';          // chross   ⛌   𐍇
@@ -27,11 +28,12 @@ public class TicTacToe {
         printMap();
 
         while(true) {
+            MOVE_NUMBER++;
             humanTurn();
             if(isEndGame(DOT_X)) {
                 break;
             }
-
+//            MOVE_NUMBER++;
 //            computerTurn();
 //            if(isEndGame(DOT_O)) {
 //                break;
@@ -83,6 +85,8 @@ public class TicTacToe {
 
     private static void computerTurn() {
 //        int x = -1, y = -1;
+        X = -1;
+        Y = -1;
 
         if (SILLY_MODE) {
             do {
@@ -90,39 +94,18 @@ public class TicTacToe {
                 Y = random.nextInt(SIZE);
             } while (!isCellValid(X, Y));
         } else {
-            for (int i = 0; i < SIZE; i++) {
-                for (int j = 0; j < SIZE; j++) {
+            if (MOVE_NUMBER == 1) {
+                do {
+                    X = random.nextInt(SIZE);
+                    Y = random.nextInt(SIZE);
+                } while (!isCellValid(X, Y));
+            } else {
 
-
-
-                }
             }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ************************************************************************************************
 
 
         }
@@ -307,6 +290,129 @@ public class TicTacToe {
                     result = false;
             }
         }
+        return result;
+    }
+
+
+    private static boolean checkRisk(char[][] arr, char dotRival, int a, int b) {
+
+        boolean result = false;
+
+        do {
+// Check left diagonal
+            int winCount = 0;
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (a - i > -1 && b - i > -1) {
+                    if (arr[a - i][b - i] == dotRival) {
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (a + i < SIZE && b + i < SIZE) {
+                    if (arr[a + i][b + i] == dotRival) { // ERROR
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+//Check right diagonal (switch a & b)
+            winCount = 0;
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (b - i > -1 && a + i < SIZE) {
+                    if (arr[b - i][a + i] == dotRival) {
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (b + i < SIZE && a - i > -1) {
+                    if (arr[b + i][a - i] == dotRival) {
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+// Check horizontal line
+            winCount = 0;
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (b - i > -1) {
+                    if (arr[a][b - i] == dotRival) {
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (b + i < SIZE) {
+                    if (arr[a][b + i] == dotRival) {
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+// Check vertical line
+            winCount = 0;
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (a - i > -1) {
+                    if (arr[a - i][b] == dotRival) {
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+            for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                if (a + i < SIZE) {
+                    if (arr[a + i][b] == dotRival) {
+                        winCount++;
+                    } else break;
+                } else break;
+            }
+
+            if (winCount == WINNER_SEQUENCE - 1) {
+                result = true;
+                break;
+            }
+
+        } while (false);
+
         return result;
     }
 
