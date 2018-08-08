@@ -9,13 +9,14 @@ public class TicTacToe {
     private static int SIZE = 3;        // fild size
     private static int WINNER_SEQUENCE = SIZE;        // количество Х/О подряд для победы
     private static int X,Y;
+    private static boolean MAP_IS_EMPTY = false;
 
-    private static final char DOT_EMPTY = '•';      // empty field  •
-    private static final char DOT_X = 'X';          // chross   ⛌   𐍇
-    private static final char DOT_O = 'O';          // zero     ੦  ⃝   ◯
+    private static final char DOT_EMPTY = '•';      // empty field  •    ⃞  □   '🞎' 🞐  🞏 □ ▢ ▣ ▤ ▥ ▦ ▧ ▨ ▩
+    private static final char DOT_X = '⛌';          // chross   ⛌   𐍇
+    private static final char DOT_O = '੦';          // zero     ੦  ◯
 
 
-    private static final boolean SILLY_MODE = false;
+    private static final boolean SILLY_MODE = true;
 
     private static Scanner scanner = new Scanner(System.in);
     private static Random random = new Random();
@@ -31,10 +32,10 @@ public class TicTacToe {
                 break;
             }
 
-            computerTurn();
-            if(isEndGame(DOT_O)) {
-                break;
-            }
+//            computerTurn();
+//            if(isEndGame(DOT_O)) {
+//                break;
+//            }
         }
 
         System.out.println("Game over.");
@@ -52,11 +53,13 @@ public class TicTacToe {
 
     private static void printMap() {
         for (int i = 0; i <= SIZE; i++) {
-            System.out.print(i + " ");
+            if (i == 0 ) System.out.print("░ ");
+            else System.out.print(i + " ");
         }
         System.out.println();
 
         for (int i = 0; i < SIZE; i++) {
+//            System.out.print((char)(i+65) + " ");
             System.out.print((i+1) + " ");
             for (int j = 0; j < SIZE; j++) {
                 System.out.print(map[i][j] + " ");
@@ -89,24 +92,55 @@ public class TicTacToe {
         } else {
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j < SIZE; j++) {
-                    // qwe
+
+
+
                 }
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
-        System.out.println("Computer made a move -> " + (Y + 1) + " " + (X + 1));
+        System.out.println("Computer move -> " + (Y + 1) + " " + (X + 1) + "  [" + map[Y][X] + "]");
         map[Y][X] = DOT_O;
     }
 
+    /*
+    Поменял не много логику. Если попадает в поле и ячейка свободна то true.
+     */
     private static boolean isCellValid(int x, int y) {
-        boolean result = true;
-
-        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) {
-            result = false;
-        }
-
-        if (map[x][y] != DOT_EMPTY) {
-            result = false;
+        boolean result = false;
+        if (x > 0 || x < SIZE || y > 0 || y < SIZE) {
+            if (map[y][x] == DOT_EMPTY) {
+                result = true;
+            }
+            System.out.println("isCellValid  [" + y + "][" + x + "]-> " + map[y][x]);
         }
 
         return result;
@@ -174,31 +208,34 @@ public class TicTacToe {
                 break;
             }
 
-//Check right diagonal
+//Check right diagonal (switch a & b)
             winCount = 0;
             for (int i = 1; i < WINNER_SEQUENCE; i++) {
-                if (a - i > -1 && b + i < SIZE) {
-                    if (arr[a - i][b + i] == dotUser) {
+                if (b - i > -1 && a + i < SIZE) {
+                    if (arr[b - i][a + i] == dotUser) {
                         winCount++;
                     } else break;
                 } else break;
             }
+
             if (winCount == WINNER_SEQUENCE - 1) {
                 result = true;
                 break;
             }
 
             for (int i = 1; i < WINNER_SEQUENCE; i++) {
-                if (a + i < SIZE && b - i > -1) {
-                    if (arr[a + i][b - i] == dotUser) {
+                if (b + i < SIZE && a - i > -1) {
+                    if (arr[b + i][a - i] == dotUser) {
                         winCount++;
                     } else break;
                 } else break;
             }
+
             if (winCount == WINNER_SEQUENCE - 1) {
                 result = true;
                 break;
             }
+
 // Check horizontal line
             winCount = 0;
             for (int i = 1; i < WINNER_SEQUENCE; i++) {
@@ -208,6 +245,7 @@ public class TicTacToe {
                     } else break;
                 } else break;
             }
+
             if (winCount == WINNER_SEQUENCE - 1) {
                 result = true;
                 break;
@@ -220,6 +258,7 @@ public class TicTacToe {
                     } else break;
                 } else break;
             }
+
             if (winCount == WINNER_SEQUENCE - 1) {
                 result = true;
                 break;

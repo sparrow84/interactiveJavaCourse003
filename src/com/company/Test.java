@@ -3,7 +3,7 @@ package com.company;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Main {
+public class Test {
 
     private static int SIZE = 3;
     private static char DOT_EMPTY = '*';
@@ -32,23 +32,27 @@ public class Main {
  {'X','*','*'}};
  /**/
 
-/**/
+/** /
  char[][] arr = {{'X','X','X'},
  {'*','*','*'},
  {'*','*','*'}};
  /**/
 
-/** /
- char[][] arr = {{'*','*','*'},
- {'*','X','*'},
- {'X','*','*'}};
- /**/
+/**/
+        char[][] arr = {{'*','*','X'},
+                        {'*','X','*'},
+                        {'*','*','*'}};
+/**/
 
 
         printCharArray2D(arr);
 
+        int a = 0;
+        int b = 2;
+/*
         int a = scanner.nextInt();
         int b = scanner.nextInt();
+*/
         System.out.println("Entered numbers: " + a + " " + b);
 
         System.out.println(checkWin(arr, DOT_USER, a, b));
