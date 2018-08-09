@@ -6,20 +6,20 @@ import java.util.Scanner;
 public class TicTacToe {
 
     private static char[][] map;        // game matrix
-    private static int SIZE = 3;        // fild size
-    private static int WINNER_SEQUENCE = SIZE;        // количество Х/О подряд для победы
-    private static int X,Y;
+    private static final int SIZE = 3;        // fild size
+    private static final int WINNER_SEQUENCE = SIZE;        // количество Х/О подряд для победы
+    private static int x, y;
 //    private static boolean MAP_IS_EMPTY = true;
 //    private static int MOVE_NUMBER = 0;
-    private static int[][] HUMAN_MOVES = new int[2][SIZE*SIZE/2+1];
-    private static int[][] COMP_MOVES  = new int[2][SIZE*SIZE/2+1];
+    private static int[][] humanMoves;
+    private static int[][] compMoves;
 
     private static final char DOT_EMPTY = '•';      // empty field  •    ⃞  □   '🞎' 🞐  🞏 □ ▢ ▣ ▤ ▥ ▦ ▧ ▨ ▩
     private static final char DOT_X = '⛌';          // chross   ⛌   𐍇
     private static final char DOT_O = '੦';          // zero     ੦  ◯
 
 
-    private static final boolean SILLY_MODE = true;
+    private static final boolean SILLY_MODE = false;
 
     private static Scanner scanner = new Scanner(System.in);
     private static Random random = new Random();
@@ -35,10 +35,10 @@ public class TicTacToe {
             if(isEndGame(DOT_X)) {
                 break;
             }
-//            computerTurn();
-//            if(isEndGame(DOT_O)) {
-//                break;
-//            }
+            computerTurn();
+            if(isEndGame(DOT_O)) {
+                break;
+            }
         }
 
         System.out.println("Game over.");
@@ -55,11 +55,13 @@ public class TicTacToe {
     }
 
     private static void initHMCM() {
-        map = new char[SIZE][SIZE];
-        for(int i = 0 ; i < SIZE; i++) {
-            for(int j = 0; j < SIZE; j++) {
-                HUMAN_MOVES[i][j] = -1;
-                COMP_MOVES[i][j] = -1;
+        humanMoves = new int[2][SIZE*SIZE/2+1];
+        compMoves = new int[2][SIZE*SIZE/2+1];
+
+        for(int i = 0 ; i < humanMoves.length; i++) {
+            for(int j = 0; j < humanMoves[0].length; j++) {
+                humanMoves[i][j] = -1;
+                compMoves[i][j] = -1;
             }
         }
     }
@@ -87,13 +89,13 @@ public class TicTacToe {
 
         do {
             System.out.print("Enter the coordinates \nseparated by a space -> ");
-            Y = scanner.nextInt() - 1;
-            X = scanner.nextInt() - 1;
-        } while(!isCellValid(X,Y));
+            y = scanner.nextInt() - 1;
+            x = scanner.nextInt() - 1;
+        } while(!isCellValid(x, y));
 
-        writeInMoves(HUMAN_MOVES, X, Y);
+        writeInMoves(humanMoves, x, y);
 
-        map[Y][X] = DOT_X;
+        map[y][x] = DOT_X;
     }
 
     private static void computerTurn() {
@@ -102,45 +104,152 @@ public class TicTacToe {
         if (SILLY_MODE) {
             sillyMode();
         } else {
-            if (HUMAN_MOVES[0][0] == -1 && COMP_MOVES[0][0] == -1) {
+            if (humanMoves[0][0] == -1 && compMoves[0][0] == -1) {
                 sillyMode();
-            } else if (HUMAN_MOVES[0][1] == -1) {
+            } else if (humanMoves[0][1] == -1) {
                 sillyMode();
             } else {
 
-                int a = 0, b = 0;
+                do {
+// Check left diagonal
+                    int posibleMoveX = -1;
+                    int posibleMoveY = -1;
+                    int riskCount = 0;
+                    int xLocal = -1;
+                    int yLocal = -1;
 
-                for (int i = 0; i < HUMAN_MOVES.length; i++) {
-                    if (HUMAN_MOVES[0][i] == -1) {
-                        for (int j = i-2; j > -1 ; j--) {
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x - i;
+                        yLocal = y - i;
 
-                            a = HUMAN_MOVES[0][i-1] - HUMAN_MOVES[0][j];
-                            b = HUMAN_MOVES[1][i-1] - HUMAN_MOVES[1][j];
-
-                        }
+                        if (xLocal > -1 && yLocal > -1) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
                     }
-                }
+
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    }
+
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x + i;
+                        yLocal = y + i;
+
+                        if (xLocal < SIZE && yLocal < SIZE) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
+                    }
+
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    }
+
+//Check RIGHT diagonal
+
+                    riskCount = 0;
+
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x - i;
+                        yLocal = y + i;
+
+                        if (xLocal > -1 && yLocal < SIZE) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
+                    }
+
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    }
+
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x + i;
+                        yLocal = y - i;
+
+                        if (xLocal < SIZE && yLocal > -1) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
+                    }
+
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    } else sillyMode();
+
+                } while (false);
             }
         }
+
+
+        // Единицы добавляются для согласования с выведенным полем на экране
+        System.out.println("Computer move -> " + (y + 1) + " " + (x + 1) + "  [" + map[y][x] + "]");
+        writeInMoves(compMoves, x, y);
+        map[y][x] = DOT_O;
+    }
 // ************************************************************************************************
 
 
-        System.out.println("Computer move -> " + (Y + 1) + " " + (X + 1) + "  [" + map[Y][X] + "]");
-        writeInMoves(COMP_MOVES, X, Y);
-        map[Y][X] = DOT_O;
-    }
-
     private static void sillyMode() {
-        X = -1;
-        Y = -1;
+
+        System.out.println("Silly mod activated (0.0)");
+
+        x = -1;
+        y = -1;
         do {
-            X = random.nextInt(SIZE);
-            Y = random.nextInt(SIZE);
-        } while (!isCellValid(X, Y));
+            x = random.nextInt(SIZE);
+            y = random.nextInt(SIZE);
+        } while (!isCellValid(x, y));
     }
 
     /*
@@ -148,8 +257,8 @@ public class TicTacToe {
      */
     private static boolean isCellValid(int x, int y) {
         boolean result = false;
-        if (x > 0 || x < SIZE || y > 0 || y < SIZE) {
-            if (map[y][x] == DOT_EMPTY) {
+        if (x > -1 && x < SIZE && y > -1 && y < SIZE) { // Если координаты в приделах поля
+            if (map[y][x] == DOT_EMPTY) { // Если по этим координатам не занятая клетка
                 result = true;
             }
             System.out.println("isCellValid  [" + y + "][" + x + "]-> " + map[y][x]);
@@ -166,7 +275,7 @@ public class TicTacToe {
 
 
 
-        if (checkWin(map,plauerSumbol,X,Y)) {
+        if (checkWin(map,plauerSumbol, x, y)) {
             System.out.println("Win " + plauerSumbol);
             resalt = true;
         }
