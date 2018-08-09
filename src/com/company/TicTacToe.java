@@ -115,8 +115,8 @@ public class TicTacToe {
                     int posibleMoveX = -1;
                     int posibleMoveY = -1;
                     int riskCount = 0;
-                    int xLocal = -1;
-                    int yLocal = -1;
+                    int xLocal;
+                    int yLocal;
 
                     for (int i = 1; i < WINNER_SEQUENCE; i++) {
                         xLocal = x - i;
@@ -202,24 +202,86 @@ public class TicTacToe {
                         break;
                     }
 
+// Check horizontal line
+                    riskCount = 0;
 
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x;
+                        yLocal = y - i;
 
+                        if (yLocal > -1) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
+                    }
 
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    }
 
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x;
+                        yLocal = y + i;
 
+                        if (yLocal < SIZE) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
+                    }
 
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    }
 
+// Check vertical line
 
+                    riskCount = 0;
 
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x - i;
+                        yLocal = y;
 
+                        if (xLocal > -1) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
+                    }
 
+                    if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
+                        x = posibleMoveX;
+                        y = posibleMoveY;
+                        break;
+                    }
 
+                    for (int i = 1; i < WINNER_SEQUENCE; i++) {
+                        xLocal = x + i;
+                        yLocal = y;
 
-
-
-
-
-
+                        if (xLocal < SIZE) {
+                            if (map[xLocal][yLocal] == DOT_X) {
+                                riskCount++;
+                            } else if (map[xLocal][yLocal] == DOT_EMPTY) {
+                                posibleMoveX = xLocal;
+                                posibleMoveY = yLocal;
+                            } else break;
+                        } else break;
+                    }
 
                     if (riskCount == WINNER_SEQUENCE - 2 && posibleMoveX > -1) {
                         x = posibleMoveX;
@@ -234,11 +296,10 @@ public class TicTacToe {
 
         // Единицы добавляются для согласования с выведенным полем на экране
         System.out.println("Computer move -> " + (y + 1) + " " + (x + 1) + "  [" + map[y][x] + "]");
+        isCellValid(x,y);
         writeInMoves(compMoves, x, y);
         map[y][x] = DOT_O;
     }
-// ************************************************************************************************
-
 
     private static void sillyMode() {
 
